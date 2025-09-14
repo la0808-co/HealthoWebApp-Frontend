@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Healtho - Healthcare Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .chat-container {
+            background: white;
+            width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #0077cc;
+        }
+        form {
+            display: flex;
+            margin-top: 20px;
+            flex-direction: column;
+            gap: 10px;
+        }
+        select, input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+        input[type="submit"] {
+            padding: 10px;
+            background: #0077cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .response {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e6f7ff;
+            border-left: 4px solid #0077cc;
+            white-space: pre-line;
+        }
+        .legend {
+            font-size: 14px;
+            margin-top: 10px;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h2>💬 Healtho Diagnosis</h2>
+        <form method="post">
+            <label for="symptoms">Select your symptoms (use Ctrl+Click or Cmd+Click for multiple):</label>
+            <select id="symptoms" name="message" multiple size="8">
+    {% for symptom in symptoms %}
+        <option value="{{ symptom }}">{{ symptom.replace('_', ' ').title() }}</option>
+    {% endfor %}
+</select>
+            <input type="submit" value="Diagnose">
+        </form>
+        {% if response %}
+            <div class="response">
+                {{ response }}
+            </div>
+        {% endif %}
+        {% if chart_url %}
+    <img src="{{ url_for('static', filename=chart_url) }}" alt="Risk Chart" style="margin-top: 20px; max-width: 100%;">
+    <div class="legend">
+        <strong>Chart Legend:</strong><br>
+        <span><strong>Consult Doctor</strong> – High risk. Immediate medical attention recommended.</span><br>
+        <span><strong>Self-care</strong> – Low risk. Monitor your symptoms and rest at home.</span>
+    </div>
+    {% if selected_symptoms %}
+    <div class="legend" style="margin-top: 10px;">
+        <strong>Selected Symptoms:</strong><br>
+        {{ selected_symptoms.replace('_', ' ').title() }}
+    </div>
+    {% endif %}
+    {% endif %}
+    <div class="legend" style="margin-top: 15px; text-align: center;">
+    <strong>📱 Scan to Access on Mobile:</strong><br>
+    <img src="{{ url_for('static', filename='healtho_qr.png') }}" alt="QR Code to open site" style="margin-top: 10px; max-width: 150px;">
+    <p style="font-size: 13px; color: gray;">Or visit the URL directly in your mobile browser</p>
+</div>
+</div>
+</body>
+</html>
